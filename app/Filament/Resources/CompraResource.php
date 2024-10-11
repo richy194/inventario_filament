@@ -88,8 +88,10 @@ class CompraResource extends Resource
                     ->date()
                     ->sortable(),
 
+                // Columna para mostrar el total de la venta
                 Tables\Columns\TextColumn::make('total')
                     ->label('Total')
+                    ->money('USD') // Formato de dinero
                     ->sortable(),
             ])
             ->actions([
