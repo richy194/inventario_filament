@@ -24,8 +24,8 @@ class RichyPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id('santander')
+            ->path('santander')
             ->login()
             //->colors([
               //  'primary' => Color::blue,
