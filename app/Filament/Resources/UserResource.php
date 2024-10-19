@@ -3,7 +3,6 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
-use App\Filament\Resources\UserResource\RelationManagers;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -12,8 +11,8 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
@@ -36,43 +35,46 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->hiddenOn('edit')
-                    ->maxLength(255),
-                Select::make('roles')->multiple()->relationship('roles', 'name'),    
+                    ->maxLength(255)
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                Select::make('roles')->multiple()->relationship('roles', 'name')   
             ]);
     }
+// Añadir este método para hashear la contraseña antes de crear el usuario
+   
+
+
+
+
+
+
+
+
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('name'),
-                    
                 Tables\Columns\TextColumn::make('email'),
-                    
                 Tables\Columns\TextColumn::make('email_verified_at'),
-                
                 Tables\Columns\TextColumn::make('roles.name'),
-                    
-                
-            ])
-            ->filters([
-                //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
                 Tables\Actions\Action::make('verify')
-                ->icon('heroicon-m-check-badge')
-                ->action(function(User $user){
-                $user->email_verified_at = Date('Y-m-d H:i:s');
-                $user ->save();
-                }),
+                    ->icon('heroicon-m-check-badge')
+                    ->action(function(User $user) {
+                        $user->email_verified_at = now();
+                        $user->save();
+                    }),
                 Tables\Actions\Action::make('unverify')
-                ->icon('heroicon-m-x-circle')
-                ->action(function(User $user){
-                $user->email_verified_at = null;
-                $user ->save();
-                })
+                    ->icon('heroicon-m-x-circle')
+                    ->action(function(User $user) {
+                        $user->email_verified_at = null;
+                        $user->save();
+                    }),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -96,4 +98,6 @@ class UserResource extends Resource
             'edit' => Pages\EditUser::route('/{record}/edit'),
         ];
     }
+
+    
 }

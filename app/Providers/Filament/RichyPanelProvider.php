@@ -24,12 +24,12 @@ class RichyPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('richy')
-            ->path('richy')
+            ->id('admin')
+            ->path('admin')
             ->login()
-            ->colors([
-                'primary' => Color::Amber,
-            ])
+            //->colors([
+              //  'primary' => Color::blue,
+            //])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
@@ -52,7 +52,8 @@ class RichyPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-           // ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            ->plugin(FilamentSpatieRolesPermissionsPlugin::make())
+            ->plugin(\BezhanSalleh\FilamentShield\FilamentShieldPlugin::make())
             ->authMiddleware([
                 Authenticate::class,
             ]);
